@@ -55,19 +55,21 @@ contract TokenDistributer is Context, ERC1155Holder {
         _members = IERC721(membersCardAddress_);
     }
         
-    function byebye(address payable owner) external{
+    function byebye(address payable owner_) external{
         require(
             _owner == _msgSender(),
             "Must have admin role"
         );
-        selfdestruct(owner);
+        // Send stock tokens back to owner address before selfdestructing
+        _nft.safeTransferFrom( address(this), _msgSender(), _tokenId, _nft.balanceOf(address(this), _tokenId), "");
+        selfdestruct(owner_);
     }
 
-     function _isClaimable(address owner_) private view returns (bool){ 
+    function _isClaimable(address user_) private view returns (bool){ 
         return (
-            (_members.balanceOf(owner_)>0) &&
-            (_claimed[owner_]==false) &&
-            (_nft.balanceOf(owner_, _tokenId)==0) &&
+            (_members.balanceOf(user_)>0) &&
+            (_claimed[user_]==false) &&
+            (_nft.balanceOf(user_, _tokenId)==0) &&
             (_nft.balanceOf(address(this), _tokenId)>0)
             );
     }
