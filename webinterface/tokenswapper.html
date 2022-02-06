@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/3.0.0-rc.5/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>TokenSwapper</title>
+  </head>
+  <body>
+    <style>
+      .meta-gray {
+        -webkit-filter: grayscale(1);
+      }
+      .meta-normal {
+        -webkit-filter: grayscale(0);
+      }
+    </style>
+
+    <div>
+      <div style="margin-top: 30px; margin-right: 30px" class="row text-right">
+        <div class="col-md-12">
+          <button id="enableMetamask" class="btn btn-secondary">
+            Connect with Metamask
+          </button>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col-md-12">
+          <span id="status"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div style="margin-top: 30px" class="row text-center">
+        <div class="col-md-12">
+          <h2>minimum JPYC NFT market</h2>
+          <h5>Sell and Buy NFTs with JPYC</h5>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row text-center" style="margin-top: 30px">
+        <div class="col-md-12">
+          <h4>Sell your NFT</h4>
+        </div>
+      </div>
+      <div class="row text-center" style="margin-top: 30px">
+        <div class="col-md-6">
+          <div>
+            <div class="input-group my-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"
+                  >Contract Address</span
+                >
+              </div>
+              <input
+                id="addressContract"
+                type="text"
+                class="form-control"
+                placeholder="0xAAAAAAAAAA"
+              />
+            </div>
+            <div>
+              <div class="input-group my-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"
+                    >Token ID</span
+                  >
+                </div>
+                <input
+                  id="tokenId"
+                  type="text"
+                  class="form-control"
+                  placeholder="3"
+                />
+              </div>
+              <div>
+                <div class="input-group my-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      >Number of sell</span
+                    >
+                  </div>
+                  <input
+                    id="stock"
+                    type="text"
+                    class="form-control"
+                    placeholder="5"
+                  />
+                </div>
+              </div>
+              <div>
+                <div class="input-group my-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"
+                      >Price in JPYC</span
+                    >
+                  </div>
+                  <input
+                    id="price"
+                    type="text"
+                    class="form-control"
+                    placeholder="10000"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card" style="width: 24rem">
+            <img
+              class="bd-placeholder-img card-img-top"
+              id="imgNew"
+              width="100%"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+              role="img"
+            />
+            <div class="card-body">
+              <h5 class="card-title" id="newTokenName">New</h5>
+              <p class="card-text">
+                <small><span id="addressNew"></span></small>
+              </p>
+              <p class="card-text">
+                <small><span id="descriptionNew"></span></small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center" style="margin-top: 15px">
+        <div class="col-md-12">
+          <span>
+            <button id="approve" class="btn btn-primary">① Approve</button>
+          </span>
+          <span>
+            <button id="exchange" class="btn btn-primary">② Sell</button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <hr width="90%" />
+    <div class="container">
+      <div
+        class="row text-center"
+        style="margin-top: 30px; margin-bottom: 30px"
+      >
+        <div class="col-md-12">
+          <h4>Buy NFTs with JPYC</h4>
+        </div>
+      </div>
+
+      <div class="row text-center" id="exchangeContainer">
+        <div class="col-md-4">
+          <div class="card">
+            <img
+              class="bd-placeholder-img card-img-top"
+              id="imgOld"
+              width="100%"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+              role="img"
+            />
+            <div class="card-body">
+              <h5 class="card-title" id="oldTokenName">Old</h5>
+              <p class="card-text">
+                <small><span id="addressOld"></span></small>
+              </p>
+              <p class="card-text">
+                <small><span id="descriptionOld"></span></small>
+              </p>
+              <span>
+                <button
+                  id="approve"
+                  class="btn btn-primary"
+                  style="margin-top: 30px"
+                >
+                  Buy Now
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card">
+            <img
+              class="bd-placeholder-img card-img-top"
+              id="imgOld"
+              width="100%"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+              role="img"
+            />
+            <div class="card-body">
+              <h5 class="card-title" id="oldTokenName">Old</h5>
+              <p class="card-text">
+                <small><span id="addressOld"></span></small>
+              </p>
+              <p class="card-text">
+                <small><span id="descriptionOld"></span></small>
+              </p>
+              <span>
+                <button
+                  id="approve"
+                  class="btn btn-primary"
+                  style="margin-top: 30px"
+                >
+                  Buy Now
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card">
+            <img
+              class="bd-placeholder-img card-img-top"
+              id="imgOld"
+              width="100%"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+              role="img"
+            />
+            <div class="card-body">
+              <h5 class="card-title" id="oldTokenName">Old</h5>
+              <p class="card-text">
+                <small><span id="addressOld"></span></small>
+              </p>
+              <p class="card-text">
+                <small><span id="descriptionOld"></span></small>
+              </p>
+              <span>
+                <button
+                  id="approve"
+                  class="btn btn-primary"
+                  style="margin-top: 30px"
+                >
+                  Buy Now
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col-md-12">
+          <p id="hash"></p>
+        </div>
+      </div>
+    </div>
+    <script src="js/tokenswapper.js"></script>
+  </body>
+</html>
