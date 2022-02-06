@@ -11,10 +11,10 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
 contract TokenDistributer is Context, ERC1155Holder {
-    IERC721 public _members;
-    IERC1155 public _nft;
-    uint256 public _tokenId;
-    address public _owner;
+    IERC721 private _members;
+    IERC1155 private _nft;
+    uint256 private _tokenId;
+    address private _owner;
     mapping(address => bool) private _claimed;
 
     constructor(address nftAddress_, uint256 tokenId_, address membersCardAddress_) {
